@@ -82,6 +82,21 @@ while [[ $# > 1 ]]; do
   esac
 done
 
+# Add the proxy variables to RUN_OPTS. These will be later on passed to docker
+# so that users behind corporate proxy can build the source
+RUN_OPTS+=("-e ftp_proxy")
+RUN_OPTS+=("-e http_proxy")
+RUN_OPTS+=("-e https_proxy")
+RUN_OPTS+=("-e no_proxy")
+RUN_OPTS+=("-e socks_proxy")
+# In general having uppercase proxies is a good idea because different
+# applications running inside Docker may only honor uppercase proxies
+RUN_OPTS+=("-e FTP_PROXY")
+RUN_OPTS+=("-e HTTPS_PROXY")
+RUN_OPTS+=("-e HTTP_PROXY")
+RUN_OPTS+=("-e NO_PROXY")
+RUN_OPTS+=("-e SOCKS_PROXY")
+
 RUN_OPTS+=(--rm -it --network=host)
 # Map the working directory and /tmp to allow scripts/binaries to run and also
 # output data that might be used by other scripts/binaries
