@@ -69,7 +69,9 @@ function get_python_cmd() {
 
 (( $# < 1 )) && usage
 
-IMAGE="tensorflow/serving:nightly-devel"
+IMAGE=${IMAGE:-"tensorflow/serving:nightly-devel"}
+DOCKER_OPTS=${DOCKER_OPTS:-"--disable-content-trust -e http_proxy -e https_proxy -e socks_proxy -e no_proxy"}
+
 RUN_OPTS=()
 while [[ $# > 1 ]]; do
   case "$1" in
@@ -104,4 +106,4 @@ if ! docker pull ${IMAGE} ; then
 fi
 
 echo "== Running cmd: ${CMD}"
-docker run ${RUN_OPTS[@]} ${IMAGE} bash -c "$(get_switch_user_cmd) ${CMD}"
+docker run ${DOCKER_OPTS} ${RUN_OPTS[@]} ${IMAGE} bash -c "$(get_switch_user_cmd) ${CMD}"
